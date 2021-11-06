@@ -1,0 +1,55 @@
+FROM tomcat:9.0
+
+RUN sed -ir 's|</Host>|<Valve className="org.apache.catalina.valves.ErrorReportValve" showReport="false" showServerInfo="false"/> </Host>|g' /usr/local/tomcat/conf/server.xml
+
+
+# $ docker build . -t tomcat:zerobanner
+# $ docker run -it -p 8080:8080 tomcat:zerobanner /bin/bash -c "/usr/local/tomcat/bin/catalina.sh run"
+# $ telnet localhost 8080
+
+
+### REMEDIATED:
+
+#telnet localhost 8080
+#Trying ::1...
+#Connected to localhost.
+#Escape character is '^]'.
+#
+#
+#HTTP/1.1 400 
+#Content-Type: text/html;charset=utf-8
+#Content-Language: en
+#Content-Length: 435
+#Date: Fri, 05 Nov 2021 00:28:44 GMT
+#Connection: close
+#
+#<!doctype html><html lang="en"><head><title>HTTP Status 400 ? Bad Request</title><style type="text/css">body {font-family:Tahoma,#Arial,sans-serif;} h1, h2, h3, b {color:white;background-color:#525D76;} h1 {font-size:22px;} h2 {font-size:16px;} h3 #{font-size:14px;} p {font-size:12px;} a {color:black;} .line {height:1px;background-color:#525D76;border:none;}</style></#head><body><h1>HTTP Status 400 ? Bad Request</h1></body></html>Connection closed by foreign host.
+
+
+### DEFAULT:
+
+#$ telnet localhost 8080
+#Trying ::1...
+#Connected to localhost.
+#Escape character is '^]'.
+#
+#
+#HTTP/1.1 400 
+#Content-Type: text/html;charset=utf-8
+#Content-Language: en
+#Content-Length: 1943
+#Date: Thu, 04 Nov 2021 23:31:58 GMT
+#Connection: close
+#
+#<!doctype html><html lang="en"><head><title>HTTP Status 400 ? Bad Request</title><style type="text/css">body {font-family:Tahoma,Arial,sans-serif;} h1, h2, h3, b {color:white;background-color:#525D76;} h1 {font-size:22px;} h2 {font-size:16px;} h3 {font-size:14px;} p {font-size:12px;} a {color:black;} .line {height:1px;background-color:#525D76;border:none;}</style></head><body><h1>HTTP Status 400 ? Bad Request</h1><hr class="line" /><p><b>Type</b> Exception Report</p><p><b>Message</b> Invalid character found in method name [r0x0d0x0a...]. HTTP method names must be tokens</p><p><b>Description</b> The server cannot or will not process the request due to something that is perceived to be a client error (e.g., malformed request syntax, invalid request message framing, or deceptive request routing).</p><p><b>Exception</b></p><pre>java.lang.IllegalArgumentException: Invalid character found in method name [r0x0d0x0a...]. HTTP method names must be tokens
+#	org.apache.coyote.http11.Http11InputBuffer.parseRequestLine(Http11InputBuffer.java:419)
+#	org.apache.coyote.http11.Http11Processor.service(Http11Processor.java:269)
+#	org.apache.coyote.AbstractProcessorLight.process(AbstractProcessorLight.java:65)
+#	org.apache.coyote.AbstractProtocol$ConnectionHandler.process(AbstractProtocol.java:895)
+#	org.apache.tomcat.util.net.NioEndpoint$SocketProcessor.doRun(NioEndpoint.java:1722)
+#	org.apache.tomcat.util.net.SocketProcessorBase.run(SocketProcessorBase.java:49)
+#	org.apache.tomcat.util.threads.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1191)
+#	org.apache.tomcat.util.threads.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:659)
+#	org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:61)
+#	java.base&#47;java.lang.Thread.run(Thread.java:829)
+#</pre><p><b>Note</b> The full stack trace of the root cause is available in the server logs.</p><hr class="line" /><h3>Apache Tomcat/9.0.54</h3></body></html>Connection closed by foreign host.
